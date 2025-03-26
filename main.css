@@ -103,6 +103,11 @@ header h1 {
     vertical-align: bottom;
 }
 
+.graph-segment.hit {
+    background: #e74c3c;
+}
+
+
 /* MAIN CONTENT */
 .main-content {
     width: 80%;
@@ -144,6 +149,7 @@ header h1 {
     padding: 1rem;
     margin-bottom: 1rem;
     overflow-y: auto;
+    max-height: 500px;
     border: 1px solid #ddd;
 }
 .log-entry {

@@ -21,27 +21,24 @@
     <!-- SIDEBAR -->
     <div class="sidebar">
       <h2>Players</h2>
-      <!-- The player-list now has its own scroll bar and is limited to showing 5 players -->
+      <!-- Player list with a maximum of 5 visible at a time -->
       <div class="player-list" id="playerList"></div>
     </div>
 
     <!-- MAIN CONTENT -->
     <div class="main-content">
-      <!-- STATUS BAR -->
+      <!-- STATUS BAR (simulate hit button removed) -->
       <div class="status-bar">
         <div>Status: <strong id="status">RUNNING</strong></div>
-        <button class="simulate-btn" onclick="simulateHit()">Simulate Hit Alert</button>
       </div>
 
       <!-- LOG SECTION -->
       <div class="log-container" id="logContainer">
-        <div class="log-entry info">[11:19:25] Unit 4 ACK received</div>
-        <div class="log-entry info">[11:19:26] Unit 3 ACK received</div>
-        <div class="log-entry info">[11:19:27] Unit 1 ACK received</div>
       </div>
     </div>
   </div>
 
+  <!-- HIT ALERT MODAL -->
   <div class="modal-overlay" id="modalOverlay">
     <div class="modal">
       <button class="close-modal" onclick="closeModal()">×</button>
