@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8" />
+    <title>Head Collision Detection UI</title>
+    <link rel="stylesheet" href="main.css" />
+</head>
+
+<body>
+    <div class="sidebar">
+        <h2>Players</h2>
+        <div class="player-list">
+            <div class="player">
+                <h3>Player 1</h3>
+                <div class="player-graph"></div>
+            </div>
+            <div class="player">
+                <h3>Player 2</h3>
+                <div class="player-graph"></div>
+            </div>
+            <div class="player">
+                <h3>Player 3</h3>
+                <div class="player-graph"></div>
+            </div>
+            <div class="player">
+                <h3>Player 4</h3>
+                <div class="player-graph"></div>
+            </div>
+            <div class="player">
+                <h3>Player 5</h3>
+                <div class="player-graph"></div>
+            </div>
+            <div class="player">
+                <h3>Player 6</h3>
+                <div class="player-graph"></div>
+            </div>
+            <div class="player">
+                <h3>Player 7</h3>
+                <div class="player-graph"></div>
+            </div>
+        </div>
+    </div>
+
+    <div class="main-content">
+        <div class="status-bar">
+            <div>
+                Status: <span id="status">RUNNING</span>
+            </div>
+            <button class="simulate-btn" onclick="simulateHit()">Simulate Hit Alert</button>
+        </div>
+
+        <!-- LOG SECTION -->
+        <div class="log-container" id="logContainer">
+            <div class="log-entry">[11:19:25] Unit 4 ACK received</div>
+            <div class="log-entry">[11:19:26] Unit 3 ACK received</div>
+            <div class="log-entry">[11:19:27] Unit 1 ACK received</div>
+        </div>
+
+        <div class="alert-container" id="hitAlert">
+            <h1>HIT ALERT</h1>
+            <p>Concussion-level hit found in <strong>Unit <span id="unitNumber">1</span></strong></p>
+            <p>Angular acceleration: <strong><span id="angAccel">65.43</span> G</strong></p>
+            <p>Linear acceleration: <strong><span id="linAccel">100.12</span> G</strong></p>
+            <p>This is their <strong><span id="hitCount">3rd</span></strong> hit of the game.</p>
+        </div>
+    </div>
+
+    <script>
+        function simulateHit() {
+
+            let unitNumber = Math.floor(Math.random() * 7) + 1;
+            let angAccel = (Math.random() * 100).toFixed(2);
+            let linAccel = (Math.random() * 100).toFixed(2);
+
+            let hitCountElement = document.getElementById('hitCount');
+            let hitCount = parseInt(hitCountElement.textContent) + 1;
+            hitCountElement.textContent = hitCount;
+
+            document.getElementById('unitNumber').textContent = unitNumber;
+            document.getElementById('angAccel').textContent = angAccel;
+            document.getElementById('linAccel').textContent = linAccel;
+            document.getElementById('hitCount').textContent = hitCount;
+
+            // Display the alert container
+            document.getElementById('hitAlert').style.display = 'block';
+
+            // 2. Log a new entry
+            const logContainer = document.getElementById('logContainer');
+            const newLogEntry = document.createElement('div');
+            const now = new Date().toLocaleTimeString();
+            newLogEntry.className = 'log-entry';
+            newLogEntry.textContent = `[${now}] HIT ALERT: Unit ${unitNumber}, Angular=${angAccel} G, Linear=${linAccel} G`;
+
+            logContainer.appendChild(newLogEntry);
+
+            // (Optional) Scroll the log container to the bottom
+            logContainer.scrollTop = logContainer.scrollHeight;
+        }
+    </script>
+</body>
+
+</html>
