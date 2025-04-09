@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <title>Anseris System Juno</title>
-  <link rel="stylesheet" href="main.css" />
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/main.css') }}" />
 </head>
 <body>
   <!-- HEADER -->
@@ -55,6 +55,6 @@
     © 2025 Anseris System - All rights reserved
   </footer>
 
-  <script src="main.js"></script>
+  <script src="{{ url_for('static', filename='js/main.js') }}"></script>
 </body>
 </html>

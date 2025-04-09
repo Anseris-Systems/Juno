@@ -1,37 +1,40 @@
 const playerListEl = document.getElementById("playerList");
 
-const players = [];
-const NUMBER_OF_PLAYERS = 3;
+const players = {};
+// const NUMBER_OF_PLAYERS = 3;
 
 const threshold = 95;
 
-for (let i = 1; i <= NUMBER_OF_PLAYERS; i++) {
-    players.push({
-        id: i,
-        hits: 0,
-        timelineEl: null, // reference to this player's hit timeline element
-    });
-}
+function load_new_player(id, name) {
+  let new_player = {
+    id: id,
+    name: name,
+    hits: 0,
+    timelineEl: null, // reference to this player's hit timeline element
+  }; 
 
-// Create DOM elements for each player
-players.forEach((player) => {
-    const playerDiv = document.createElement("div");
-    playerDiv.className = "player";
-    // Create a timeline container inside the player's graph area
-    playerDiv.innerHTML = `
-    <h3>Player ${player.id}</h3>
+  const playerDiv = document.createElement("div");
+  playerDiv.className = "player";
+  // Create a timeline container inside the player's graph area
+  playerDiv.innerHTML = `
+    <h3>Player ${new_player.id}</h3>
     <div class="player-stats">
-      <span>Hits: <span class="hits-count">${player.hits}</span></span>
-      <span>ID: #${player.id}</span>
+      <span>Hits: <span class="hits-count">${new_player.hits}</span></span>
+      <span>ID: #${new_player.id}</span>
+
     </div>
     <div class="player-graph">
       <div class="graph-timeline"></div>
     </div>
   `;
-    // Save reference to the timeline element for later updates
-    player.timelineEl = playerDiv.querySelector(".graph-timeline");
-    playerListEl.appendChild(playerDiv);
-});
+  // Save reference to the timeline element for later updates
+  new_player.timelineEl = playerDiv.querySelector(".graph-timeline");
+  playerListEl.appendChild(playerDiv);
+  
+  // Add the new player to the players object
+  players[new_player.id] = new_player;
+  console.log("New player added:", new_player.name);
+}
 
 function logMetric(player, metricValue) {
     const now = new Date().toLocaleTimeString();
@@ -70,25 +73,34 @@ function updatePlayerChart(player, metricValue) {
     logMetric(player, metricValue);
 }
 
-//Purpose: Simulate metric values by generating random numbers and passing
-function simulateRandomMetrics() {
-    players.forEach((player) => {
-        const randomValue = Math.floor(Math.random() * 101); // random value between 0 and 100
-        updatePlayerChart(player, randomValue);
-    });
+function getPlayerHitData(){
+  console.log("Fetching player data...");
+  fetch("/data")
+  .then(response => response.json())
+  .then(data => {
+    // Check if the player already exists in the players object
+    if (!players[data.player_id]) {
+      load_new_player(data.player_id, data.player_name);
+    }
+    
+    const player = players[data.player_id];
+    const metricValue = data.hit;
+    
+    // Update the player's chart with the new metric value
+    updatePlayerChart(player, metricValue);
+  })
+  .catch(error => {
+    console.error("Error fetching player data:", error);
+  });
+  
 }
 
 // Call simulateRandomMetrics every second (1000ms) for simulation
-setInterval(simulateRandomMetrics, 2000);
+setInterval(getPlayerHitData, 2000);
 
 
 function showHitAlert(player, metricValue) {
     const modalOverlay = document.getElementById("modalOverlay");
-
-    // If the modal is already visible, do not display another alert.
-    // if (modalOverlay.style.display === "flex") {
-    //     return;
-    // }
 
     // Populate modal fields with the player's information and metric
     document.getElementById("unitNumber").textContent = player.id;
@@ -107,7 +119,6 @@ function showHitAlert(player, metricValue) {
     // Show the modal
     modalOverlay.style.display = "flex";
 }
-
 
 function closeModal() {
     document.getElementById("modalOverlay").style.display = "none";
