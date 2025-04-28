@@ -7,31 +7,32 @@ import math
 app = Flask(__name__)
 
 # Windows: 'COM3', Mac/Linux: '/dev/ttyUSB0' or similar
-SERIAL_PORT = 'COM3'
-BAUD_RATE = 115200
+SERIAL_PORT = 'COM9'
+BAUD_RATE = 9600
 
-latest_data = "No data received yet"
 
 def read_serial():
-    global latest_data
     ser = serial.Serial(SERIAL_PORT, BAUD_RATE)
-    while True:
-        if ser.in_waiting:
-            line = ser.readline().decode('utf-8').strip()
-            if line.startswith("Received: "):
-                print("Data:", latest_data)
+    line = ser.readline().decode('utf-8').strip()
+    data = [float(i) for i in line[9:].split(',')]
+    return data
+
+
 
 @app.route('/data', methods=['GET'])
 def get_data():
-    # return jsonify({"acceleration": latest_data})
-    x = random.randint(0, 150)
-    y = random.randint(0, 150)
-    z = random.randint(0, 150)
+    try:
+        x, y, z = read_serial()
+    except serial.SerialException as e:
+        x = random.randint(0, 150)
+        y = random.randint(0, 150)
+        z = random.randint(0, 150)
+
     player_id = random.randint(1, 10)
     player_name = "Player" + str(player_id)
         
-    # hit = math.sqrt(x**2 + y**2 + z**2)
-    hit = random.randint(0, 100)
+    hit = math.sqrt(x**2 + y**2 + z**2)
+
     data = {
         "x": x,
         "y": y,
